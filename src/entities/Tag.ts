@@ -8,20 +8,13 @@ from "typeorm";
 
 import {v4 as uuidv4} from 'uuid';
 
-@Entity("users")
-class User {
-  
+@Entity("tags")
+class Tag{
   @PrimaryColumn()
-  readonly id:string;
-  
+  readonly id: string;
+
   @Column()
   name: string;
-
-  @Column()
-  email: string;
-
-  @Column()
-  admin: boolean;
 
   @CreateDateColumn()
   created_at: Date;
@@ -31,11 +24,9 @@ class User {
 
   constructor(){
     if(!this.id){
-      this.id = uuidv4();
+      this.id = uuidv4()
     }
   }
-
 }
 
-
-export { User };
+export {Tag}
