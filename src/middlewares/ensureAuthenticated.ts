@@ -1,10 +1,28 @@
 import {Request, Response, NextFunction} from 'express';
+import { verify } from 'jsonwebtoken';
 
 
+interface IPayload{
+  sub: string;
+}
 
-export function ensureAuthenticated(request:Request, response:Response, Next:NextFunction){
-  const {token} = request.headers.authorization;
-  console.log(token);
+export function ensureAuthenticated(request:Request, response:Response, next:NextFunction){
+  const authToken = request.headers.authorization;
 
-  return Next();
+  if(!authToken){
+    return response.status(401).end();
+  }
+
+  //bearer 81dc9bdb52d04dc20036dbd8313ed055
+  const [, token] = authToken.split(" ")
+  try{
+    const {sub} = verify(token, "81dc9bdb52d04dc20036dbd8313ed055") as IPayload;
+
+    request.user_id = sub;
+
+    return next();
+  }catch(err){
+    return response.status(401).end();
+  }
+  return next();
 }
